@@ -4,8 +4,10 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import dev.mayuna.mayusjdautils.utils.MessageInfo;
+import dev.mayuna.mayuslibrary.exceptionreporting.ExceptionReporter;
 import dev.mayuna.puppy.util.MayoLogger;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -66,8 +68,11 @@ public class CommandListener implements com.jagrosh.jdautilities.command.Command
                     .setClosable(true)
                     .setCloseAfterSeconds(10)
                     .addOnInteractionWhitelist(event.getAuthor())
-                    .setContent("Exception occurred while processing " + event.getAuthor().getAsMention() +"'s command `" + event.getMessage().getContentRaw() + "`. This exception will be automatically reported. Sorry for inconvenience and please, try again.\nTechnical stuff: `" + throwable + "`")
+                    .setContent("There was an exception while processing " + event.getAuthor().getAsMention() + "'s prefix command `" + event.getMessage().getContentRaw() + "`.\nThis will be automatically reported. Sorry for inconvenience and please, try again.")
+                    .addCustomField(new MessageEmbed.Field("Technical details", MessageInfo.formatExceptionInformationField(throwable), false))
                     .send(event.getChannel());
+
+            ExceptionReporter.getInstance().uncaughtException(Thread.currentThread(), throwable);
         } catch (Exception exception) {
             exception.printStackTrace();
             MayoLogger.warning("Exception occurred while editing original message from command which resulted in exception! Probably safe to ignore.");
@@ -85,8 +90,11 @@ public class CommandListener implements com.jagrosh.jdautilities.command.Command
                     .setType(MessageInfo.Type.ERROR)
                     .setEmbed(true)
                     .setCloseAfterSeconds(10)
-                    .setContent("Exception occurred while processing this command. This exception will be automatically reported. Sorry for inconvenience and please, try again.\nTechnical stuff: `" + throwable + "`")
-                    .send(event.getHook()); // TODO: Closable
+                    .setContent("There was an exception while processing " + event.getInteraction().getUser() + "'s slash command `" + event.getCommandString() + "`.\nThis will be automatically reported. Sorry for inconvenience and please, try again.")
+                    .addCustomField(new MessageEmbed.Field("Technical details", MessageInfo.formatExceptionInformationField(throwable), false))
+                    .send(event.getHook());
+
+            ExceptionReporter.getInstance().uncaughtException(Thread.currentThread(), throwable);
         } catch (Exception exception) {
             exception.printStackTrace();
             MayoLogger.warning("Exception occurred while editing original message from command which resulted in exception! Probably safe to ignore.");

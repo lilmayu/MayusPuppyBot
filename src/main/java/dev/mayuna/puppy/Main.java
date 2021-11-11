@@ -17,7 +17,6 @@ import dev.mayuna.puppy.listeners.CommandListener;
 import dev.mayuna.puppy.util.Config;
 import dev.mayuna.puppy.util.Constants;
 import dev.mayuna.puppy.util.MayoLogger;
-import dev.mayuna.puppy.util.PlatformType;
 import dev.mayuna.puppy.util.types.CommandLogType;
 import dev.mayuna.puppy.util.types.FatalLogType;
 import dev.mayuna.puppy.util.types.SuccessLogType;
@@ -101,7 +100,7 @@ public class Main {
     }
 
     private static void loadCommands() {
-        client.addSlashCommands(new YoutubeCommand());
+        YoutubeCommand.register(client);
     }
 
     private static void loadManagers() {

@@ -30,7 +30,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name:'logback-core', version: '1.2.6'
 
     // Personal libraries
-    implementation 'dev.mayuna:mayus-jda-utilities:2.0.1.1'
+    implementation 'dev.mayuna:mayus-jda-utilities:2.0.2'
     implementation 'dev.mayuna:mayus-library:1.0.1'
     implementation 'dev.mayuna:mayus-json-utilities:1.3'
 
