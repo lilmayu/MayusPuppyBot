@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ public class PolyGame implements Savable {
     private @Getter @Setter ManagedMessage managedMessage;
 
     private @Getter @Setter String gameId;
+    private @Getter @Setter String winner = "N/A";
     private @Getter @Setter MapSize mapSize;
     private @Getter @Setter List<User> players;
 
@@ -84,11 +84,11 @@ public class PolyGame implements Savable {
     public EmbedBuilder createGameEmbed() {
         EmbedBuilder embedBuilder = DiscordUtils.getDefaultEmbed();
 
-        embedBuilder.setTitle("Polytopia Game (`" + getSafeGameId() + "`)");
-        embedBuilder.setDescription("**Game ID**: `" + gameId + "`\n" + "**Map Size**: " + mapSize.name() + "(" + mapSize.tiles + ")\n" + "**No. Players**: " + players.size());
+        embedBuilder.setTitle("Polytopia Game (`" + managedMessage.getMessageID() + "`)");
+        embedBuilder.setDescription("**Game ID**: `" + gameId + "`\n" + "**Map Size**: " + mapSize.name() + "(" + mapSize.tiles + ")\n" + "**No. Players**: " + players.size() + "\n" + "**Winner**: " + winner);
 
         embedBuilder.addField(getPlayersField());
-        embedBuilder.setFooter("Version 0.1");
+        embedBuilder.setFooter("Version 1.0");
 
         return embedBuilder;
     }
@@ -98,7 +98,7 @@ public class PolyGame implements Savable {
 
         int counter = 1;
         for (User player : players) {
-            content += "[" + counter + "]: " + player.getAsMention() + "\n";
+            content += "`[" + counter + "]` " + player.getAsMention() + "\n";
             counter++;
         }
 
@@ -114,6 +114,7 @@ public class PolyGame implements Savable {
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.add("managedMessage", managedMessage.toJsonObject());
+        jsonObject.addProperty("winner", winner);
         jsonObject.addProperty("gameId", gameId);
         jsonObject.addProperty("mapSize", mapSize.name());
 
@@ -131,6 +132,7 @@ public class PolyGame implements Savable {
         MayuJson mayuJson = new MayuJson(jsonObject);
 
         managedMessage = new ManagedMessage(mayuJson.getOrCreate("managedMessage", new JsonObject()).getAsJsonObject());
+        winner = mayuJson.getOrCreate("winner", new JsonPrimitive("N/A")).getAsString();
         gameId = mayuJson.getOrCreate("gameId", new JsonPrimitive("N/A")).getAsString();
         mapSize = MapSize.get(mayuJson.getOrCreate("mapSize", new JsonPrimitive(MapSize.UNKNOWN.name())).getAsString());
 

@@ -156,6 +156,7 @@ public class PolyCommand {
                 options.add(new OptionData(OptionType.STRING, "edit_by_game_id", "Selects Poly Game by its Game ID", false));
                 options.add(new OptionData(OptionType.STRING, "edit_by_message_id", "Selects Poly Game by its Message ID", false));
                 options.add(new OptionData(OptionType.STRING, "game_id", "Game ID", false));
+                options.add(new OptionData(OptionType.STRING, "winner", "Winner", false));
 
                 OptionData mapSizeOption = new OptionData(OptionType.STRING, "map_size", "Map size", false);
                 for (PolyGame.MapSize mapSize : PolyGame.MapSize.values()) {
@@ -195,6 +196,11 @@ public class PolyCommand {
                 if (event.getOption("game_id") != null) {
                     polyGame.setGameId(event.getOption("game_id").getAsString());
                     madeChanges += "Changed Game ID to `" + polyGame.getGameId() + "`\n";
+                }
+
+                if (event.getOption("winner") != null) {
+                    polyGame.setWinner(event.getOption("winner").getAsString());
+                    madeChanges += "Changed Winner to `" + polyGame.getWinner() + "`\n";
                 }
 
                 if (event.getOption("map_size") != null) {
