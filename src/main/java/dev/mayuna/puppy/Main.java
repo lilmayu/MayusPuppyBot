@@ -11,9 +11,11 @@ import dev.mayuna.mayuslibrary.exceptionreporting.ExceptionReporter;
 import dev.mayuna.mayuslibrary.logging.Log;
 import dev.mayuna.mayuslibrary.logging.Logger;
 import dev.mayuna.mayuslibrary.logging.coloring.ColoringString;
+import dev.mayuna.puppy.commands.PolyCommand;
 import dev.mayuna.puppy.commands.YoutubeCommand;
 import dev.mayuna.puppy.console.ConsoleManager;
 import dev.mayuna.puppy.listeners.CommandListener;
+import dev.mayuna.puppy.managers.PolyGamesManager;
 import dev.mayuna.puppy.util.Config;
 import dev.mayuna.puppy.util.Constants;
 import dev.mayuna.puppy.util.MayoLogger;
@@ -101,10 +103,11 @@ public class Main {
 
     private static void loadCommands() {
         YoutubeCommand.register(client);
+        PolyCommand.register(client);
     }
 
     private static void loadManagers() {
-
+        PolyGamesManager.load();
     }
 
     private static void loadLibrarySettings() {
@@ -133,6 +136,7 @@ public class Main {
                 MayoLogger.info("Shutting down...");
 
                 Config.save();
+                PolyGamesManager.save();
 
                 MayoLogger.info("o/");
             }
